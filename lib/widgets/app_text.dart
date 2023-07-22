@@ -63,7 +63,7 @@ class AppText extends Text {
     String data, {
     Key? key,
     this.color = ColorName.primaryColor,
-    this.fontWeight = FontWeight.normal,
+    this.fontWeight = FontWeight.bold,
     this.fontSize = 12,
   }) : super(
           data,
@@ -71,7 +71,7 @@ class AppText extends Text {
           textAlign: TextAlign.left,
           style: TextStyle(
             color: color,
-            fontFamily: FontFamily.playfair,
+            fontFamily: FontFamily.merriweather,
             fontWeight: fontWeight,
             fontSize: fontSize,
           ),
