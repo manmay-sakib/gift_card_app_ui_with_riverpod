@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:gift_card_app_ui_with_riverpod/gen/colors.gen.dart';
 import 'package:gift_card_app_ui_with_riverpod/gen/fonts.gen.dart';
 import 'package:gift_card_app_ui_with_riverpod/model/card_model.dart';
+import 'package:gift_card_app_ui_with_riverpod/repositories/card_repository.dart';
+import 'package:gift_card_app_ui_with_riverpod/utilities/card_category_extensions.dart';
 import 'package:gift_card_app_ui_with_riverpod/widgets/app_text.dart';
+import '../widgets/custom_bottom_nav_bar.dart';
+import '../widgets/custom_chip.dart';
+import '../widgets/custom_gift_card.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -17,6 +23,9 @@ class HomeScreen extends StatelessWidget {
           child: AppText.title("Gift Card"),
         ),
       ),
+      bottomNavigationBar: CustomNavBar(
+        index: 0,
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
@@ -29,8 +38,43 @@ class HomeScreen extends StatelessWidget {
               height: 10,
             ),
             _CategoryFilters(),
+            SizedBox(
+              height: 10,
+            ),
+            _CardGrid(),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _CardGrid extends ConsumerWidget {
+  const _CardGrid({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final size = MediaQuery.of(context).size;
+    final CardRepository cardRepository = ref.watch(cardRepositoryProvider);
+    var allCards = cardRepository.getAllCards();
+    return SizedBox(
+      height: size.height * 0.65,
+      child: GridView.builder(
+        shrinkWrap: true,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 0.75,
+          mainAxisSpacing: 10,
+        ),
+        itemCount: 10,
+        itemBuilder: ((context, index) {
+          return Center(
+            child: CustomGiftCard(
+              card: CardModel.sampleCards[0],
+              width: size.width * 0.425,
+            ),
+          );
+        }),
       ),
     );
   }
@@ -47,7 +91,7 @@ class _SearchBar extends StatelessWidget {
           filled: true,
           fillColor: ColorName.lightGrey,
           hintText: "Search Card",
-          prefixIcon: Icon(Icons.search),
+          prefixIcon: const Icon(Icons.search),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
             borderSide: BorderSide.none,
@@ -72,38 +116,10 @@ class _CategoryFilters extends StatelessWidget {
         children: [
           ...CardCategory.values.map(
             (category) => CustomChip(
-              label: category.name,
+              label: category.capitalName(),
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class CustomChip extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  const CustomChip({
-    Key? key,
-    required this.label,
-    this.isSelected = false,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(right: 10),
-      padding: EdgeInsets.symmetric(
-        horizontal: 25,
-        vertical: 5,
-      ),
-      decoration: BoxDecoration(
-        color: isSelected ? ColorName.primaryColor : ColorName.disabledGrey,
-        borderRadius: BorderRadius.circular(50),
-      ),
-      child: Center(
-        child: AppText.small(label),
       ),
     );
   }

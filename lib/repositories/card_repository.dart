@@ -1,6 +1,9 @@
 import 'package:gift_card_app_ui_with_riverpod/model/card_model.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+part 'card_repository.g.dart';
 
-// TODO: Create a provider with Riverpod generator to expose the repository
+@riverpod
+CardRepository cardRepository(CardRepositoryRef ref) => CardRepository();
 
 class CardRepository {
   Future<List<CardModel>> getAllCards() async {

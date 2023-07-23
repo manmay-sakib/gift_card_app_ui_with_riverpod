@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gift_card_app_ui_with_riverpod/screens/home_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
